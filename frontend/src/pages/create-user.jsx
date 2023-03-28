@@ -19,13 +19,11 @@ function CreateUserPage() {
 
   /** @type {React.FormEventHandler<HTMLFormElement>} */
   const handleFormSubmit = (event) => {
-    /* //!Temporary Disabled prevents unauthenticated access 
     services.user.createOne({ name: formData.username }).then((data) => {
       setMessage(JSON.stringify(data, null, 2));
     });
     setFormData({ username: "" });
     event.preventDefault();
-    */
   };
 
   return (
