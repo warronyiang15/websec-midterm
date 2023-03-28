@@ -12,6 +12,7 @@ const port = process.env.PORT || 8000;
 
 const app = express();
 //app.use(express.static(frontendDir));
+app.use(express.json());
 app.use(rootRouter);
 app.use(express.static(frontendDir));
 
