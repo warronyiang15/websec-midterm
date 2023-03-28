@@ -1,9 +1,12 @@
 import express from 'express';
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
+import { csrfErrorHandler, doubleCsrfProtection } from './csrf';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import rootRouter from "./routes";
 import { prisma } from "./adapters";
-import session from 'express-session';
+
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const frontendDir = path.join(__dirname, "../../frontend/dist");
@@ -12,7 +15,8 @@ const frontendDir = path.join(__dirname, "../../frontend/dist");
 const port = process.env.PORT || 8000;
 
 const app = express();
-//app.use(express.static(frontendDir));
+
+app.use(express.static(frontendDir));
 app.use(express.json());
 
 if (process.env.NODE_ENV === "production") {
@@ -34,8 +38,11 @@ if (process.env.NODE_ENV === "production") {
     })
 );
 
+app.use(cookieParser());
+app.use(doubleCsrfProtection);
+app.use(csrfErrorHandler);
 app.use(rootRouter);
-app.use(express.static(frontendDir));
+
 
 app.get("/visit", (req, res) => {
     console.log(req.session);
@@ -56,7 +63,7 @@ app.get("*", (req, res) => { // Keep as the last route
 });
 
 app.listen(port, () => {
-    console.log('hi');
+    console.log(`Example app listening on 127.0.0.1:${port}`);
 });
 
 process.on("exit", async () => {
